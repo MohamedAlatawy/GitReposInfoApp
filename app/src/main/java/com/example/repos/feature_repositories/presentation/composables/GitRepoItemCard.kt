@@ -24,7 +24,7 @@ import com.example.repos.feature_repositories.domain.model.GitRepoInfo
 @Composable
 fun GitRepoItemCard(
     gitRepoInfo: GitRepoInfo,
-){
+) {
 
     Card(
         shape = MaterialTheme.shapes.small,
@@ -38,52 +38,46 @@ fun GitRepoItemCard(
             modifier = Modifier.fillMaxSize()
         ) {
 
-            gitRepoInfo.owner.avatarUrl?.let { url ->
-                val avatar = LoadPicture(url = url).value
+//            gitRepoInfo.owner.avatarUrl.let { url ->
+            val avatar = LoadPicture(url = gitRepoInfo.owner.avatarUrl).value
 
-                avatar?.let { img ->
-                    Image(
-                        bitmap = img.asImageBitmap(),
-                        contentDescription = "Default avatar",
-                        modifier = Modifier
-                            .size(100.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
+            Image(
+                bitmap = avatar!!.asImageBitmap(),
+                contentDescription = "Owner avatar",
+                modifier = Modifier
+                    .size(100.dp),
+                contentScale = ContentScale.Crop
+            )
 
-            gitRepoInfo.repoName?.let { repoName ->
-                Column(
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = "Repository name : ${gitRepoInfo.repoName}",
                     modifier = Modifier
-                        .fillMaxWidth(0.7f)
-                        .padding(12.dp)
-                ) {
-                    Text(
-                        text = "Repository name : $repoName",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(align = Alignment.Start),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.Start),
+                    style = MaterialTheme.typography.headlineMedium
+                )
 
-                    Text(
-                        text = "Owner name : ${gitRepoInfo.owner.ownerName}",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(align = Alignment.Start),
-                        style = MaterialTheme.typography.headlineMedium
-                    )
+                Text(
+                    text = "Owner name : ${gitRepoInfo.owner.ownerName}",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.Start),
+                    style = MaterialTheme.typography.headlineMedium
+                )
 
-                    Text(
-                        text = "Repository creation date : ${gitRepoInfo.repoInfo.formatDate(gitRepoInfo.repoInfo.creationDate)}",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(align = Alignment.Start),
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
+                Text(
+                    text = "Repository creation date : ${gitRepoInfo.repoInfo.formatDate(gitRepoInfo.repoInfo.creationDate)}",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.Start),
+                    style = MaterialTheme.typography.headlineSmall
+                )
             }
-
         }
     }
 }
