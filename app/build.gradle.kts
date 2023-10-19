@@ -93,6 +93,9 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     ksp ("com.github.bumptech.glide:ksp:4.16.0")
 
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+
+
     //hilt-dagger
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")

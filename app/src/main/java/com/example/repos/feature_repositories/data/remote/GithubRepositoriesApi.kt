@@ -10,9 +10,10 @@ interface GithubRepositoriesApi {
     @GET("repositories")
     suspend fun getAllRepositories(): List<GitRepositoryDto>
 
-    @GET("repos/{full_name}")
+    @GET("repos/{name}/{repo_name}")
     suspend fun getRepoInfo(
-        @Path("full_name") fullName: String
+        @Path("name") name: String,
+        @Path("repo_name") repoName: String,
     ): RepoInfoDto
 
 

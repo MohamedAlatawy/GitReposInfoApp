@@ -15,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -38,28 +40,23 @@ class MainActivity : ComponentActivity() {
 
                 val viewModel: GitRepoViewModel = hiltViewModel()
 
-//                val gitReposInfo = viewModel.gitReposInfo.value
-//
-//                val loading = viewModel.loading.value
+                val page by viewModel.page.collectAsState()
 
-                val page = viewModel.page.value
-
-                val state = viewModel.state.value
-
-
+                val state by viewModel.state.collectAsState()
 
                 Scaffold(
                     topBar = {
                         TopAppBar(
                             title = { Text(text = " Git repositories ") },
                             colors = TopAppBarDefaults.mediumTopAppBarColors(
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
                             )
                         )
                     },
                     bottomBar = {},
-                ) {
+                ) { paddingValues ->
                     GitRepoList(
+                        paddingValues = paddingValues,
                         gitRepoState = state,
                         onChangeGitRepoScrollPosition = viewModel::onChangeGitRepoScrollPosition,
                         page = page,

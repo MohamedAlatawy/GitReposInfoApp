@@ -1,9 +1,7 @@
 package com.example.repos.feature_repositories.presentation
 
 import android.util.Log
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.repos.core.util.PAGE_SIZE
@@ -16,6 +14,8 @@ import com.example.repos.feature_repositories.presentation.GitRepoListEvent.Firs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,16 +27,14 @@ class GitRepoViewModel @Inject constructor(
     private val getGitRepos: GetGitRepos
 ): ViewModel() {
 
-    val gitReposInfo: MutableState<List<GitRepoInfo?>> = mutableStateOf(listOf())
+    private val _state = MutableStateFlow(GitRepoState())
+    val state = _state.asStateFlow()
 
-    val loading = mutableStateOf(false)
+    private val _page = MutableStateFlow(1)
+    val page = _page.asStateFlow()
 
-    private val _state = mutableStateOf(GitRepoState())
-    val state: State<GitRepoState> = _state
 
-    val page = mutableStateOf(1)
-
-    var gitRepoScrollPosition = 0
+    private val gitRepoScrollPosition = MutableStateFlow(0)
 
     private var gitPageJob: Job? = null
 
@@ -68,11 +66,9 @@ class GitRepoViewModel @Inject constructor(
 
 
 
-    private suspend fun firstPage() {
-
+    private fun firstPage() {
         gitPageJob?.cancel()
         gitPageJob = viewModelScope.launch {
-            delay(500L)
             getGitRepos(0)
                 .onEach { result ->
                     when(result) {
@@ -81,24 +77,18 @@ class GitRepoViewModel @Inject constructor(
                                 gitRepoItems = result.data ?: emptyList(),
                                 isLoading = false
                             )
-                            gitReposInfo.value = _state.value.gitRepoItems
-
                         }
                         is Resource.Error -> {
                             _state.value = state.value.copy(
                                 gitRepoItems = result.data ?: emptyList(),
                                 isLoading = false
                             )
-                            gitReposInfo.value = _state.value.gitRepoItems
-
                         }
                         is Resource.Loading -> {
                             _state.value = state.value.copy(
                                 gitRepoItems = result.data ?: emptyList(),
                                 isLoading = true
                             )
-                            gitReposInfo.value = _state.value.gitRepoItems
-
                         }
                     }
                 }.launchIn(this)
@@ -108,14 +98,13 @@ class GitRepoViewModel @Inject constructor(
 
     private suspend fun nextPage() {
 
-        if ((gitRepoScrollPosition + 1) >= (page.value * PAGE_SIZE)) {
+        if ((gitRepoScrollPosition.value + 1) >= (_page.value * PAGE_SIZE)) {
 
-
-            if (page.value > 1) {
+            if (_page.value > 1) {
                 gitPageJob?.cancel()
                 gitPageJob = viewModelScope.launch {
                     delay(500L)
-                    getGitRepos(page.value)
+                    getGitRepos(_page.value * PAGE_SIZE)
                         .onEach { result ->
                             when(result) {
                                 is Resource.Success -> {
@@ -147,19 +136,17 @@ class GitRepoViewModel @Inject constructor(
     }
 
     private fun appendGitRepos(gitRepos: List<GitRepoInfo?>): List<GitRepoInfo?> {
-        val current = ArrayList(gitReposInfo.value)
-        current.addAll(gitRepos)
-
-        gitReposInfo.value = current
-        return gitReposInfo.value
+       return  _state.value.gitRepoItems.toMutableList().apply {
+            addAll(gitRepos)
+        }
     }
 
     private fun incrementPage() {
-        page.value = page.value + 1
+        _page.value = _page.value + 1
     }
 
     fun onChangeGitRepoScrollPosition(position: Int) {
-        gitRepoScrollPosition = position
+        gitRepoScrollPosition.value = position
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.repos.feature_repositories.presentation.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +18,7 @@ import com.example.repos.feature_repositories.presentation.GitRepoState
 
 @Composable
 fun GitRepoList(
+    paddingValues: PaddingValues,
     gitRepoState: GitRepoState,
     onChangeGitRepoScrollPosition: (Int) -> Unit,
     page: Int,
@@ -28,6 +30,7 @@ fun GitRepoList(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
     ){
         LazyColumn(
             modifier = Modifier.padding(5.dp),

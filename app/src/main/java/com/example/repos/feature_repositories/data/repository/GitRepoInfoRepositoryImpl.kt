@@ -28,13 +28,14 @@ class GitRepoInfoRepositoryImpl @Inject constructor(
         try {
 
             val remoteGitRepos = api.getAllRepositories()
-            val remoteGitRepoInfo = remoteGitRepos.map { item ->
-                api.getRepoInfo(item.full_name)
+            val remoteGitRepoInfo = remoteGitRepos.dropLast(50).map {
+                api.getRepoInfo(it.owner.login,it.name)
             }
+
 
             val gitRepoInfoEntity = remoteGitRepos.mapIndexed { index, obj1 ->
 
-                val obj2 = remoteGitRepoInfo[index]
+                val obj2 = remoteGitRepoInfo[index-1]
                 GitRepoInfoEntity(
                     id = obj1.id,
                     repoName = obj1.name,
