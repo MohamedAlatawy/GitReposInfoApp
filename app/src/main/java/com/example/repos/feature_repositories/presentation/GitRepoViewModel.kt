@@ -47,6 +47,7 @@ class GitRepoViewModel @Inject constructor(
 
     fun onTriggerEvent(event: GitRepoListEvent) {
         viewModelScope.launch {
+
             try {
                 when (event) {
                     is FirstPageEvent -> {

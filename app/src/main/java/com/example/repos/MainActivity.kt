@@ -4,9 +4,21 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.repos.feature_repositories.presentation.GitRepoListEvent
 import com.example.repos.feature_repositories.presentation.GitRepoViewModel
@@ -37,7 +49,14 @@ class MainActivity : ComponentActivity() {
 
 
                 Scaffold(
-                    topBar = { Text(text = "Git Repos") },
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(text = " Git repositories ") },
+                            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
+                            )
+                        )
+                    },
                     bottomBar = {},
                 ) {
                     GitRepoList(

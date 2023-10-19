@@ -42,7 +42,7 @@ class Converters(
     fun toRepoInfoJson(repoInfo: RepoInfo) : String {
         return jsonParser.toJson(
             repoInfo,
-            object : TypeToken<Owner>(){}.type
+            object : TypeToken<RepoInfo>(){}.type
         ) ?: ""
     }
 

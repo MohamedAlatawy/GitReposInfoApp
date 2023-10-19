@@ -2,6 +2,7 @@ package com.example.repos.feature_repositories.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.repos.feature_repositories.data.local.Converters
 import com.example.repos.feature_repositories.data.local.GitRepoInfoDao
 import com.example.repos.feature_repositories.data.local.GitRepoInfoDatabase
 import com.example.repos.feature_repositories.data.remote.GithubRepositoriesApi
@@ -45,7 +46,7 @@ object GitRepoModule {
     @Singleton
     fun provideGitRepoInfoDatabase(app: Application): GitRepoInfoDatabase {
         return Room.databaseBuilder(app,GitRepoInfoDatabase::class.java, "git_repos_db")
-            .addTypeConverter(GsonParser(Gson()))
+            .addTypeConverter(Converters(GsonParser(Gson())))
             .build()
     }
 
