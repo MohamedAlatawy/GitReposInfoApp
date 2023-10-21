@@ -98,7 +98,7 @@ class GitRepoViewModel @Inject constructor(
 
     private suspend fun nextPage() {
 
-        if ((gitRepoScrollPosition.value + 1) >= (_page.value * PAGE_SIZE)) {
+        if ((gitRepoScrollPosition.value + 3) >= (_page.value * PAGE_SIZE)) {
 
             if (_page.value > 1) {
                 gitPageJob?.cancel()

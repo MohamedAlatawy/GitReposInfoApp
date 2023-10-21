@@ -17,6 +17,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -53,8 +54,23 @@ object GitRepoModule {
     @Provides
     @Singleton
     fun provideGitRepoApi(): GithubRepositoriesApi {
+
+        val token =  "Bearer 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"
+        val client = OkHttpClient.Builder()
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val request = original.newBuilder()
+                    .header("Authorization",
+                        token )
+                    .method(original.method, original.body)
+                    .build()
+                chain.proceed(request)
+            }
+            .build()
+
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GithubRepositoriesApi::class.java)

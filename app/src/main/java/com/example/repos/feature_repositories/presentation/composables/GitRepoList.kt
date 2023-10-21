@@ -1,5 +1,6 @@
 package com.example.repos.feature_repositories.presentation.composables
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.repos.core.util.PAGE_SIZE
+import com.example.repos.core.util.TAG
 import com.example.repos.feature_repositories.domain.model.GitRepoInfo
 import com.example.repos.feature_repositories.presentation.GitRepoListEvent
 import com.example.repos.feature_repositories.presentation.GitRepoState
@@ -39,13 +41,16 @@ fun GitRepoList(
             // We use itemsIndexed to get the index of each item
             itemsIndexed(gitRepoState.gitRepoItems) { index, item ->
                 onChangeGitRepoScrollPosition(index)
-                if ((index + 1) >= (page * PAGE_SIZE) && !gitRepoState.isLoading){
+                if ((index + 3) >= (page * PAGE_SIZE) && !gitRepoState.isLoading){
                     onNextPage(GitRepoListEvent.NextPageEvent)
+                    Log.e(TAG,"repo name item $index name: $item[$index].repoName")
                 }
+
                 if (item != null) {
                     GitRepoItemCard(
                         gitRepoInfo = item,
                     )
+                    Log.e(TAG,"repo name item $index name: $item[$index].repoName")
                 }
             }
         }
